@@ -26,7 +26,7 @@ def main():
 
     # Beautiful Header
     st.markdown(f"""
-    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); color:white; border-radius:16px; margin-bottom:30px; box-shadow: 0 12px 30px rgba(29,78,216,0.3);">
+    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); color:white; border-radius:16px; margin-bottom:15px; box-shadow: 0 12px 30px rgba(29,78,216,0.3);">
         <h1 style="margin:0; font-size:2.4rem; font-weight:800;">UTAH NA</h1>
         <p style="margin:10px 0 0 0; font-size:1.1rem;">
             Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • Auto-refresh every {REFRESH_INTERVAL}s
@@ -36,9 +36,9 @@ def main():
 
 
     st.markdown("""
-    <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:40px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
+    <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:15px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
         <div style="text-align:center;">
-            <h3 style="color:#0c4a6e; font-size:1.8rem; margin:0 0 20px 0; font-weight:700;"> Timelines </h3>
+            <h3 style="color:#0c4a6e; font-size:1.8rem; margin:0 0 15px 0; font-weight:700;"> Timelines </h3>
             <div style="display:flex; justify-content:space-around; flex-wrap:wrap; gap:20px;">
                 <div style="text-align:center;">
                     <p style="font-size:1.4rem; font-weight:bold; color:#166534; margin:0;">OK2P</p>
