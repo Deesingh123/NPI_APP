@@ -12,13 +12,19 @@ def main():
     REFRESH_INTERVAL = 30
     CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBqDIx_ZBSYN7RaWxCIjHMZeFBkMhQaKcmc8mvq9KrE-Z1EFeaIsC1B4Fmw_wE_1NbzsConI04b6o0/pub?gid=1841630466&single=true&output=csv"
 
-    @st.cache_data(ttl=REFRESH_INTERVAL)
+# Remove @st.cache_data completely
     def load_data():
         df = pd.read_csv(CSV_URL)
         df = df.dropna(how='all').reset_index(drop=True)
         df = df.fillna("—")
         df = df.loc[:, ~df.columns.duplicated()]
         return df
+
+# Add refresh button
+    col1, col2 = st.columns([1, 8])
+    with col1:
+        if st.button("🔄 Refresh"):
+             st.rerun()
 
     df = load_data()
 
