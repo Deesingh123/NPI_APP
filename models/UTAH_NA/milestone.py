@@ -40,7 +40,8 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-
+     
+    # Project Milestone Plan Table - Exact Match to Your Image
     st.markdown("""
     <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:40px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
         <div style="text-align:center;">
@@ -68,8 +69,6 @@ def main():
     """, unsafe_allow_html=True)
 
 
-
-    
 
     # Status calculation
     current_year = datetime.now().year
@@ -106,15 +105,15 @@ def main():
         st.markdown(f"""
         <div style="background:#ef4444; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(239,68,68,0.4);">
             <p style="margin:0; font-size:1.2rem; font-weight:700;">🔥 Overdue / Delayed</p>
-            <h2 style="margin:10px 0 0 0; font-size:4.2rem; font-weight:1000;">{overdue_count}</h2>
+            <h2 style="margin:10px 0 0 0; font-size:4.2rem; font-weight:900;">{overdue_count}</h2>
         </div>
         """, unsafe_allow_html=True)
 
     with col_pending:
         st.markdown(f"""
-        <div style="background:#fbbf24; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(251,191,36,0.4);">
+        <div style="background:#fbbf24; color:black; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(251,191,36,0.4);">
             <p style="margin:0; font-size:1.2rem; font-weight:700;">⏳ Pending</p>
-            <h2 style="margin:10px 0 0 0; font-size:4.2rem; font-weight:1000;">{pending_count}</h2>
+            <h2 style="margin:10px 0 0 0; font-size:4.2rem; font-weight:900;">{pending_count}</h2>
         </div>
         """, unsafe_allow_html=True)
 
