@@ -9,10 +9,8 @@ def main():
             del st.session_state.dashboard
         st.rerun()
 
-    #st.title("UTAH NA - Milestone Tracker Dashboard")
-
     REFRESH_INTERVAL = 30
-    CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSERW8jK8wY8-01wqcDBtNY_g8Km2g3QyxNjT1BWIg2II95wvouLQ1wsgWckkY56Q/pub?gid=1960938483&single=true&output=csv"
+    CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSe4nuvqUK1UQdv7o0aC8sunzc3sIIA6Ml29g9FV2-4CBO254JwHhA7HXXEDzefSqkgDxXNuc9bXp4-/pub?gid=942132829&single=true&output=csv"
 
     @st.cache_data(ttl=REFRESH_INTERVAL)
     def load_data():
@@ -20,7 +18,7 @@ def main():
             df = pd.read_csv(CSV_URL, header=None)
             df = df.iloc[1:]  # Skip header row
             df = df[[0, 1, 2, 3]]  # Keep only first 4 columns
-            df.columns = ["Task", "Milestone_Type", "Plan_Date", "Actual_Date"]
+            df.columns = ["Sub-Milestones", "Plan_Date", "Actual_Date", "Lead Time"]
             df = df.fillna("—")
             df = df.reset_index(drop=True)
             return df
@@ -30,18 +28,16 @@ def main():
 
     df = load_data()
 
-    # Beautiful Header (Green gradient like before)
+    # Beautiful Header
     st.markdown(f"""
     <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:white; border-radius:16px; margin-bottom:15px; box-shadow: 0 12px 30px rgba(5,150,105,0.3);">
-        <h1 style="margin:0; font-size:2.4rem; font-weight:800;">📋 Milestone Tracker Dashboard</h1>
+        <h1 style="margin:0; font-size:2.4rem; font-weight:800;">📋 UTAH NA Milestone Tracker</h1>
         <p style="margin:10px 0 0 0; font-size:1.1rem;">
             Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • Auto-refresh every {REFRESH_INTERVAL}s
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-     
-    # Project Milestone Plan Table - Exact Match to Your Image
     st.markdown("""
     <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:15px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
         <div style="text-align:center;">
@@ -49,26 +45,24 @@ def main():
             <div style="display:flex; justify-content:center; gap:80px; flex-wrap:wrap;">
                 <div style="text-align:center;">
                     <p style="font-size:1.5rem; font-weight:bold; color:#166534; margin:0;">PVT</p>
-                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">16 JAN</p>
+                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">01 sep</p>
                 </div>
                 <div style="text-align:center;">
                     <p style="font-size:1.5rem; font-weight:bold; color:#0c4a6e; margin:0;">OK2P</p>
-                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">23 FEB</p>
+                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">09 OCT</p>
                 </div>
                 <div style="text-align:center;">
                     <p style="font-size:1.5rem; font-weight:bold; color:#0c4a6e; margin:0;">OK2R</p>
-                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">16 APR</p>
+                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">29 OCT</p>
                 </div>
                 <div style="text-align:center;">
                     <p style="font-size:1.5rem; font-weight:bold; color:#0c4a6e; margin:0;">OK2S</p>
-                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">06 MAR</p>
+                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">19 NOV</p>
                 </div>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
-
-
 
     # Status calculation
     current_year = datetime.now().year
@@ -95,93 +89,34 @@ def main():
 
     df['Status'] = df.apply(get_status, axis=1)
 
-    # Metric Cards
-    overdue_count = len(df[df['Status'].str.contains("Delayed|Overdue")])
-    pending_count = len(df[df['Status'] == "Pending"])
-
-    col_spacer1, col_overdue, col_spacer_mid, col_pending, col_spacer2 = st.columns([1.0, 5, 0.5, 5, 1.0])
-
-    with col_overdue:
-        st.markdown(f"""
-        <div style="background:#ef4444; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(239,68,68,0.4); height:110px; display:flex; flex-direction:column; justify-content:center;">
-            <p style="margin:0; font-size:1.1rem; font-weight:1000;">🔥Overdue/Delayed</p>
-            <h2 style="margin:6px 0 0 0; font-size:1.6rem; font-weight:1000;">{overdue_count}</h2>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with col_pending:
-        st.markdown(f"""
-        <div style="background:#fbbf24; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(251,191,36,0.4); height:110px; display:flex; flex-direction:column; justify-content:center;  ">
-            <p style="margin:0; font-size:1.2rem; font-weight:900; text-align:center;">⏳ Pending</p>
-            <h2 style="margin:6px 0 0 0; font-size:1.6rem; font-weight:900; text-align:center;">{pending_count}</h2>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("---")
-
-    # Filters
-    fcol1, fcol2 = st.columns(2)
-    with fcol1:
-        type_filter = st.selectbox("🔄 Filter by Milestone Type", ["All", "WBS", "Sub Milestone"], key="mil_type_utah")
-    with fcol2:
-        status_filter = st.selectbox("⚡ Filter by Status", ["All", "Overdue / Delayed", "Pending"], key="mil_status_utah")
-
+    # Filters (optional - you can add if needed)
     filtered = df.copy()
-    if type_filter != "All":
-        filtered = filtered[filtered["Milestone_Type"] == type_filter]
-    if status_filter != "All":
-        if status_filter == "Overdue / Delayed":
-            filtered = filtered[filtered['Status'].str.contains("Delayed|Overdue")]
-        elif status_filter == "Pending":
-            filtered = filtered[filtered['Status'] == "Pending"]
-
-
-    # Alert
-    if overdue_count > 0:
-        st.error(f"🚨 URGENT: {overdue_count} milestones DELAYED or OVERDUE!")
-    else:
-        st.success("✅ All milestones are on track")
 
     # Beautiful HTML Table
-    table_df = filtered[["Task", "Milestone_Type", "Plan_Date", "Actual_Date", "Status"]].copy()
-    table_df['Plan_Date'] = table_df['Plan_Date'].dt.strftime('%d-%b').fillna("—")
-    table_df['Actual_Date'] = table_df['Actual_Date'].dt.strftime('%d-%b').fillna("—")
+    table_df = filtered[["Sub-Milestones", "Plan_Date", "Actual_Date", "Lead Time"]].copy()
+    table_df['Plan_Date'] = table_df['Plan_Date'].dt.strftime('%d-%b-%y').fillna("—")
+    table_df['Actual_Date'] = table_df['Actual_Date'].dt.strftime('%d-%b-%y').fillna("—")
 
     html = """
     <div style="overflow-x:auto; margin:15px 0;">
     <table style="width:95%; border-collapse:collapse; font-family:Arial, sans-serif; text-align:left; margin:auto;">
         <thead>
             <tr>
-                <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Task</th>
-                <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Milestone Type</th>
+                <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Sub-Milestones</th>
                 <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Plan Date</th>
                 <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Actual Date</th>
-                <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Status</th>
+                <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Lead Time</th>
             </tr>
         </thead>
         <tbody>
     """
 
-    prev_task = None
     for _, row in table_df.iterrows():
-        status = row['Status']
-        status_style = ""
-        if "Delayed" in status or "Overdue" in status:
-            status_style = "background:#ef4444; color:white; font-weight:bold;"
-        elif "On Time" in status:
-            status_style = "background:#22c55e; color:white; font-weight:bold;"
-        elif "Pending" in status:
-            status_style = "background:#fbbf24; color:white; font-weight:bold;"
-
-        display_task = "" if row['Task'] == prev_task else row['Task']
-        prev_task = row['Task']
-
         html += "<tr>"
-        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{display_task}</td>"
-        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Milestone_Type']}</td>"
+        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Sub-Milestones']}</td>"
         html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Plan_Date']}</td>"
         html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Actual_Date']}</td>"
-        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem; {status_style}'>{row['Status']}</td>"
+        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Lead Time']}</td>"
         html += "</tr>"
 
     html += """
