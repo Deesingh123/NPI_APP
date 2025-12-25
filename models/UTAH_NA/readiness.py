@@ -86,9 +86,15 @@ def main():
     # Final Status Logic
     def get_final_status(row):
         status_val = str(row[status_col]).strip().lower() if pd.notna(row.get(status_col)) else ""
-        closed = status_val in ["closed", "close", "done"]
-        overdue = pd.notna(row.get(target_col)) and row[target_col].normalize() < today
-        actual_done = pd.notna(row.get(actual_col))
+        closed = status_val in ["closed", "close", "done", "yes"]
+        target_past = pd.notna(row.get(target_col)) and row[target_col].normalize() < today
+
+        if closed:
+            return "Closed"  # Always "Closed" if status says closed
+        elif target_past:
+            return "NOT CLOSED – DELAYED!"
+        else:
+            return "Open"
 
         if actual_done:
             if pd.notna(row.get(target_col)) and row[actual_col] <= row[target_col]:
@@ -171,13 +177,11 @@ def main():
     for _, row in table_df.iterrows():
         final_status = row["Final Status"]
         status_style = ""
-        if "DELAYED" in final_status:
+        if final_status == "NOT CLOSED – DELAYED!":
             status_style = "background:#ef4444; color:white; font-weight:bold;"
-        elif "Late" in final_status:
-            status_style = "background:#fbbf24; color:black; font-weight:bold;"
-        elif "On Time" in final_status:
+        elif final_status == "Closed":
             status_style = "background:#22c55e; color:white; font-weight:bold;"
-        elif final_status == "Open":
+        else:  # Open
             status_style = "background:#fbbf24; color:black; font-weight:bold;"
 
         html += "<tr>"
