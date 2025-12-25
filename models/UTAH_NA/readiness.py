@@ -55,7 +55,7 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-      # Column detection - Updated to match your exact sheet
+    # Column detection - ONLY the columns that exist in your sheet
     category_col = next((c for c in df.columns if "process category" in c.lower()), None)
     owner_col = next((c for c in df.columns if "owner" in c.lower()), None)
     target_col = next((c for c in df.columns if "target date" in c.lower()), None)
@@ -63,10 +63,12 @@ def main():
     status_col = next((c for c in df.columns if "status" in c.lower()), None)
     remark_col = next((c for c in df.columns if "remark" in c.lower() or "remarks" in c.lower()), None)
 
-    # Safety check if columns are found
-    if not all([category_col, owner_col, target_col, actual_col, status_col]):
-        st.error("Required columns not found in the data. Check sheet structure.")
+    # Safety check
+    required_cols = [category_col, owner_col, target_col, actual_col, status_col]
+    if not all(required_cols):
+        st.error("One or more required columns not found in the sheet.")
         st.stop()
+
 
     # Date parsing
     if target_col:
@@ -136,7 +138,7 @@ def main():
 
     # Beautiful HTML Table - Exact Columns from Your Sheet
     cols_to_show = [category_col, owner_col, target_col, actual_col, status_col, remark_col, "Final Status"]
-    valid_cols = [c for c in cols_to_show if c in filtered.columns]
+    valid_cols = [c for c in cols_to_show if c in df.columns]
     table_df = filtered[valid_cols].copy()
 
     # Format dates
