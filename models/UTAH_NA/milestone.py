@@ -40,6 +40,37 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
+
+    st.markdown("""
+    <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:40px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
+        <div style="text-align:center;">
+            <h3 style="color:#0c4a6e; font-size:1.8rem; margin:0 0 25px 0; font-weight:700;"> Timelines </h3>
+            <div style="display:flex; justify-content:center; gap:80px; flex-wrap:wrap;">
+                <div style="text-align:center;">
+                    <p style="font-size:1.5rem; font-weight:bold; color:#166534; margin:0;">PVT</p>
+                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">16 JAN</p>
+                </div>
+                <div style="text-align:center;">
+                    <p style="font-size:1.5rem; font-weight:bold; color:#0c4a6e; margin:0;">OK2P</p>
+                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">23 FEB</p>
+                </div>
+                <div style="text-align:center;">
+                    <p style="font-size:1.5rem; font-weight:bold; color:#0c4a6e; margin:0;">OK2R</p>
+                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">16 APR</p>
+                </div>
+                <div style="text-align:center;">
+                    <p style="font-size:1.5rem; font-weight:bold; color:#0c4a6e; margin:0;">OK2S</p>
+                    <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">06 MAR</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+
+    
+
     # Status calculation
     current_year = datetime.now().year
 
