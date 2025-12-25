@@ -64,6 +64,7 @@ def main():
     category_col = next((c for c in df.columns if "process category" in c.lower()), df.columns[0])
     sub_col = next((c for c in df.columns if "sub" in c.lower()), None)
     owner_col = next((c for c in df.columns if "owner" in c.lower()), None)
+    lead_col = next((c for c in df.columns if "lead time" in c.lower()), None)
     target_col = next((c for c in df.columns if "target" in c.lower()), None)
     status_col = next((c for c in df.columns if "status" in c.lower()), None)
     remark_col = next((c for c in df.columns if "remark" in c.lower() or "remarks" in c.lower()), None)
