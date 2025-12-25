@@ -32,7 +32,7 @@ def main():
 
     # Beautiful Header (Green gradient like before)
     st.markdown(f"""
-    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:white; border-radius:16px; margin-bottom:30px; box-shadow: 0 12px 30px rgba(5,150,105,0.3);">
+    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:white; border-radius:16px; margin-bottom:15px; box-shadow: 0 12px 30px rgba(5,150,105,0.3);">
         <h1 style="margin:0; font-size:2.4rem; font-weight:800;">📋 Milestone Tracker Dashboard</h1>
         <p style="margin:10px 0 0 0; font-size:1.1rem;">
             Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • Auto-refresh every {REFRESH_INTERVAL}s
@@ -43,10 +43,10 @@ def main():
      
     # Project Milestone Plan Table - Exact Match to Your Image
     st.markdown("""
-    <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:40px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
+    <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:15px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
         <div style="text-align:center;">
-            <h3 style="color:#0c4a6e; font-size:1.6rem; margin:0 0 12px 0; font-weight:700;"> Timelines </h3>
-            <div style="display:flex; justify-content:center; gap:50px; flex-wrap:wrap;">
+            <h3 style="color:#0c4a6e; font-size:1.8rem; margin:0 0 15px 0; font-weight:700;"> Timelines </h3>
+            <div style="display:flex; justify-content:center; gap:80px; flex-wrap:wrap;">
                 <div style="text-align:center;">
                     <p style="font-size:1.5rem; font-weight:bold; color:#166534; margin:0;">PVT</p>
                     <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">16 JAN</p>
@@ -104,7 +104,7 @@ def main():
     with col_overdue:
         st.markdown(f"""
         <div style="background:#ef4444; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(239,68,68,0.4); height:110px; display:flex; flex-direction:column; justify-content:center;">
-            <p style="margin:0; font-size:1.2rem; font-weight:1000;">🔥Overdue/Delayed</p>
+            <p style="margin:0; font-size:1.1rem; font-weight:1000;">🔥Overdue/Delayed</p>
             <h2 style="margin:6px 0 0 0; font-size:1.6rem; font-weight:1000;">{overdue_count}</h2>
         </div>
         """, unsafe_allow_html=True)
@@ -112,8 +112,8 @@ def main():
     with col_pending:
         st.markdown(f"""
         <div style="background:#fbbf24; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(251,191,36,0.4); height:110px; display:flex; flex-direction:column; justify-content:center;  ">
-            <p style="margin:0; font-size:1.2rem; font-weight:1000; text-align:center;">⏳ Pending</p>
-            <h2 style="margin:6px 0 0 0; font-size:1.6rem; font-weight:1000; text-align:center;">{pending_count}</h2>
+            <p style="margin:0; font-size:1.2rem; font-weight:900; text-align:center;">⏳ Pending</p>
+            <h2 style="margin:6px 0 0 0; font-size:1.6rem; font-weight:900; text-align:center;">{pending_count}</h2>
         </div>
         """, unsafe_allow_html=True)
 
@@ -148,8 +148,8 @@ def main():
     table_df['Actual_Date'] = table_df['Actual_Date'].dt.strftime('%d-%b').fillna("—")
 
     html = """
-    <div style="overflow-x:auto; margin:20px 0;">
-    <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif;">
+    <div style="overflow-x:auto; margin:15px 0;">
+    <table style="width:95%; border-collapse:collapse; font-family:Arial, sans-serif; text-align:left; margin:auto;">
         <thead>
             <tr>
                 <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Task</th>
@@ -171,17 +171,17 @@ def main():
         elif "On Time" in status:
             status_style = "background:#22c55e; color:white; font-weight:bold;"
         elif "Pending" in status:
-            status_style = "background:#fbbf24; color:black; font-weight:bold;"
+            status_style = "background:#fbbf24; color:white; font-weight:bold;"
 
         display_task = "" if row['Task'] == prev_task else row['Task']
         prev_task = row['Task']
 
         html += "<tr>"
-        html += f"<td style='padding:12px; border:1px solid #ddd;'>{display_task}</td>"
-        html += f"<td style='padding:12px; border:1px solid #ddd;'>{row['Milestone_Type']}</td>"
-        html += f"<td style='padding:12px; border:1px solid #ddd;'>{row['Plan_Date']}</td>"
-        html += f"<td style='padding:12px; border:1px solid #ddd;'>{row['Actual_Date']}</td>"
-        html += f"<td style='padding:12px; border:1px solid #ddd; {status_style}'>{row['Status']}</td>"
+        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{display_task}</td>"
+        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Milestone_Type']}</td>"
+        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Plan_Date']}</td>"
+        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Actual_Date']}</td>"
+        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem; {status_style}'>{row['Status']}</td>"
         html += "</tr>"
 
     html += """
