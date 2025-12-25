@@ -38,9 +38,9 @@ def main():
 
     # Project Key Milestones for DALLAS NA
     st.markdown("""
-    <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:40px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
+    <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:15px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
         <div style="text-align:center;">
-            <h3 style="color:#0c4a6e; font-size:1.8rem; margin:0 0 25px 0; font-weight:700;"> Timelines </h3>
+            <h3 style="color:#0c4a6e; font-size:1.8rem; margin:0 0 15px 0; font-weight:700;"> Timelines </h3>
             <div style="display:flex; justify-content:center; gap:80px; flex-wrap:wrap;">
                 <div style="text-align:center;">
                     <p style="font-size:1.5rem; font-weight:bold; color:#166534; margin:0;">PVT</p>
