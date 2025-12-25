@@ -45,8 +45,8 @@ def main():
     st.markdown("""
     <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:40px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
         <div style="text-align:center;">
-            <h3 style="color:#0c4a6e; font-size:1.8rem; margin:0 0 25px 0; font-weight:700;"> Timelines </h3>
-            <div style="display:flex; justify-content:center; gap:80px; flex-wrap:wrap;">
+            <h3 style="color:#0c4a6e; font-size:1.6rem; margin:0 0 12px 0; font-weight:700;"> Timelines </h3>
+            <div style="display:flex; justify-content:center; gap:50px; flex-wrap:wrap;">
                 <div style="text-align:center;">
                     <p style="font-size:1.5rem; font-weight:bold; color:#166534; margin:0;">PVT</p>
                     <p style="font-size:1.3rem; color:#0c4a6e; margin:8px 0 0 0;">16 JAN</p>
@@ -99,21 +99,21 @@ def main():
     overdue_count = len(df[df['Status'].str.contains("Delayed|Overdue")])
     pending_count = len(df[df['Status'] == "Pending"])
 
-    col_spacer1, col_overdue, col_spacer_mid, col_pending, col_spacer2 = st.columns([1.5, 5, 1, 5, 1.5])
+    col_spacer1, col_overdue, col_spacer_mid, col_pending, col_spacer2 = st.columns([1.0, 5, 0.5, 5, 1.0])
 
     with col_overdue:
         st.markdown(f"""
-        <div style="background:#ef4444; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(239,68,68,0.4);">
-            <p style="margin:0; font-size:1.2rem; font-weight:700;">🔥 Overdue / Delayed</p>
-            <h2 style="margin:10px 0 0 0; font-size:4.2rem; font-weight:900;">{overdue_count}</h2>
+        <div style="background:#ef4444; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(239,68,68,0.4); height:110px; display:flex; flex-direction:column; justify-content:center;">
+            <p style="margin:0; font-size:1.2rem; font-weight:1000;">🔥Overdue/Delayed</p>
+            <h2 style="margin:6px 0 0 0; font-size:1.6rem; font-weight:1000;">{overdue_count}</h2>
         </div>
         """, unsafe_allow_html=True)
 
     with col_pending:
         st.markdown(f"""
-        <div style="background:#fbbf24; color:black; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(251,191,36,0.4);">
-            <p style="margin:0; font-size:1.2rem; font-weight:700;">⏳ Pending</p>
-            <h2 style="margin:10px 0 0 0; font-size:4.2rem; font-weight:900;">{pending_count}</h2>
+        <div style="background:#fbbf24; color:white; padding:20px 40px; border-radius:16px; text-align:center; box-shadow:0 10px 25px rgba(251,191,36,0.4); height:110px; display:flex; flex-direction:column; justify-content:center;  ">
+            <p style="margin:0; font-size:1.2rem; font-weight:1000; text-align:center;">⏳ Pending</p>
+            <h2 style="margin:6px 0 0 0; font-size:1.6rem; font-weight:1000; text-align:center;">{pending_count}</h2>
         </div>
         """, unsafe_allow_html=True)
 
@@ -124,7 +124,7 @@ def main():
     with fcol1:
         type_filter = st.selectbox("🔄 Filter by Milestone Type", ["All", "WBS", "Sub Milestone"], key="mil_type_utah")
     with fcol2:
-        status_filter = st.selectbox("⚡ Filter by Status", ["All", "Overdue / Delayed", "Pending", "Completed On Time"], key="mil_status_utah")
+        status_filter = st.selectbox("⚡ Filter by Status", ["All", "Overdue / Delayed", "Pending"], key="mil_status_utah")
 
     filtered = df.copy()
     if type_filter != "All":
@@ -134,8 +134,7 @@ def main():
             filtered = filtered[filtered['Status'].str.contains("Delayed|Overdue")]
         elif status_filter == "Pending":
             filtered = filtered[filtered['Status'] == "Pending"]
-        elif status_filter == "Completed On Time":
-            filtered = filtered[filtered['Status'] == "Completed On Time"]
+
 
     # Alert
     if overdue_count > 0:
