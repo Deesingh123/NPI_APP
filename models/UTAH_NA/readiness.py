@@ -60,16 +60,20 @@ def main():
 
 
     # Column detection
-    category_col = next((c for c in df.columns if "process category" in c.lower()), df.columns[0])
-    sub_col = next((c for c in df.columns if "sub" in c.lower()), None)
-    owner_col = next((c for c in df.columns if "owner" in c.lower()), None)
-    target_col = next((c for c in df.columns if "target" in c.lower()), None)
-    status_col = next((c for c in df.columns if "status" in c.lower()), None)
-    remark_col = next((c for c in df.columns if "remark" in c.lower() or "remarks" in c.lower()), None)
+    category_col = next((c for c in df.columns if "Process Category" in c.lower()), df.columns[0])
+    owner_col = next((c for c in df.columns if "Owner" in c.lower()), None)
+    target_col = next((c for c in df.columns if "Target Date" in c.lower()), None)
+    actual_col = next((c for c in df.columns if "Actual Date" in c.lower()), None)
+    status_col = next((c for c in df.columns if "Status" in c.lower()), None)
+    remark_col = next((c for c in df.columns if "Remark" in c.lower() or "remarks" in c.lower()), None)
 
     # Status calculation
     if target_col:
         df[target_col] = pd.to_datetime(df[target_col], errors='coerce', dayfirst=True)
+    today = pd.Timestamp.today().normalize()
+
+    if actual_col:
+        df[actual_col] = pd.to_datetime(df[actual_col], errors='coerce', dayfirst=True)
     today = pd.Timestamp.today().normalize()
 
     def get_final_status(row):
