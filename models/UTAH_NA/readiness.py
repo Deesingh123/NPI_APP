@@ -173,7 +173,7 @@ def main():
         <tbody>
     """
 
-    prev_cat = None
+
     for _, row in table_df.iterrows():
         final_status = row["Final Status"]
         status_style = ""
@@ -187,13 +187,8 @@ def main():
         html += "<tr>"
         for col in table_df.columns:
             val = str(row[col])
-            if col == category_col:
-                cell_content = "" if val == prev_cat else val
-                prev_cat = val if cell_content else prev_cat
-            else:
-                cell_content = val
             cell_style = status_style if col == "Final Status" else ""
-            html += f"<td style='padding:12px; border:1px solid #ddd; {cell_style}'>{cell_content}</td>"
+            html += f"<td style='padding:12px; border:1px solid #ddd; {cell_style}'>{val}</td>"
         html += "</tr>"
 
     html += """
