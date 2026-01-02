@@ -28,8 +28,8 @@ def main():
 
     # Beautiful Header
     st.markdown(f"""
-    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); color:white; border-radius:16px; margin-bottom:10px;">
-        <h1 style="margin:0; font-size:2.4rem; font-weight:800;">📝 MERLIN - Minutes of Meeting (MOM)</h1>
+    <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#4338ca   0%, #a78bfa 100%); color:white; border-radius:16px; margin-bottom:15px; box-shadow: 0 12px 30px rgba(124,62,237,0.3);">
+        <h1 style="margin:0; font-size:2.4rem; color:white; font-weight:1000;"> MERLIN Minutes of Meeting(MOM)</h1>
         <p style="margin:10px 0 0 0; font-size:1.1rem;">
             Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • Auto-refresh every {REFRESH_INTERVAL}s
         </p>
@@ -38,7 +38,7 @@ def main():
 
     # Meeting Header
     st.markdown("""
-    <div style="background:#f0fdf4; padding:20px; border-radius:16px; margin:15px 0; border-left:6px #22c55e; box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+    <div style="background:#f0fdf4; padding:15px; border-radius:16px; margin:10px 0; border-left:6px #22c55e; box-shadow:0 4px 20px rgba(0,0,0,0.08);">
         <h2 style="text-align:center; color:#166534; font-size:1.5rem; margin:0 0 10px 0;">Merlin NA Project NPI Meeting</h2>
         <h3 style="text-align:center; color:#0c4a6e; font-size:1.2rem; margin:5px 0;">Schedule Date: 14-Nov-2025</h3>
         <div style="display:flex; justify-content:center; gap:100px; margin-top:10px; flex-wrap:wrap;">
@@ -73,27 +73,31 @@ def main():
     closed_count = len(df[df[status_col].astype(str).str.contains("closed", case=False, na=False)])
 
     c1, c2, c3 = st.columns(3)
+
     with c1:
         st.markdown(f"""
-        <div style='background:#e0e7ff; padding:20px; border-radius:16px; text-align:center; height:150px; box-shadow:0 4px 15px rgba(0,0,0,0.1);'>
-            <p style='margin:0; font-size:1.4rem; font-weight:700; color:#1e40af;'>Total Actions</p>
-            <h2 style='margin:8px 0 0 0; font-size:2.5rem; font-weight:900; color:#1e40af;'>{total_count}</h2>
+        <div style='background:#7c3aed; padding:30px 20px; border-radius:20px; text-align:center; height:160px; 
+                    box-shadow:0 8px 25px rgba(0,0,0,0.08); display:flex; flex-direction:column; justify-content:center; align-items:center;'>
+            <p style='margin:0; font-size:1.6rem; font-weight:700; color:white;'>Total Actions</p>
+            <h2 style='margin:12px 0 0 0; font-size:3.6rem; font-weight:900; color:white;'>{total_count}</h2>
         </div>
         """, unsafe_allow_html=True)
 
     with c2:
         st.markdown(f"""
-        <div style='background:#fee2e2; padding:20px; border-radius:16px; text-align:center; height:150px; box-shadow:0 4px 15px rgba(0,0,0,0.1);'>
-            <p style='margin:0; font-size:1.4rem; font-weight:700; color:#991b1b;'>Open</p>
-            <h2 style='margin:8px 0 0 0; font-size:2.5rem; font-weight:900; color:#dc2626;'>{open_count}</h2>
+        <div style='background:#ec4899; padding:30px 20px; border-radius:20px; text-align:center; height:160px; 
+                    box-shadow:0 8px 25px rgba(0,0,0,0.08); display:flex; flex-direction:column; justify-content:center; align-items:center;'>
+            <p style='margin:0; font-size:1.6rem; font-weight:700; color:white;'>Open</p>
+            <h2 style='margin:12px 0 0 0; font-size:3.6rem; font-weight:900; color:white;'>{open_count}</h2>
         </div>
         """, unsafe_allow_html=True)
 
     with c3:
         st.markdown(f"""
-        <div style='background:#d1fae5; padding:20px; border-radius:16px; text-align:center; height:150px; box-shadow:0 4px 15px rgba(0,0,0,0.1);'>
-            <p style='margin:0; font-size:1.4rem; font-weight:700; color:#065f46;'>Closed</p>
-            <h2 style='margin:8px 0 0 0; font-size:2.5rem; font-weight:900; color:#059669;'>{closed_count}</h2>
+        <div style='background:#10b981; padding:30px 20px; border-radius:20px; text-align:center; height:160px; 
+                    box-shadow:0 8px 25px rgba(0,0,0,0.08); display:flex; flex-direction:column; justify-content:center; align-items:center;'>
+            <p style='margin:0; font-size:1.6rem; font-weight:700; color:white;'>Closed</p>
+            <h2 style='margin:12px 0 0 0; font-size:3.6rem; font-weight:900; color:white;'>{closed_count}</h2>
         </div>
         """, unsafe_allow_html=True)
 
