@@ -17,8 +17,8 @@ def main():
         try:
             df = pd.read_csv(CSV_URL, header=None)
             df = df.iloc[1:]  # Skip header row
-            df = df[[0, 1, 2, 3]]  # Keep only first 4 columns
-            df.columns = ["Sub-Milestones", "Plan_Date", "Actual_Date", "Lead Time"]
+            df = df[[0, 1, 2, 3, 4]]  # Keep only first 5 columns
+            df.columns = ["Sub-Milestones", "Plan_Date", "Actual_Date", "Lead Time", "Remarks"]  # Rename columns
             df = df.fillna("—")
             df = df.reset_index(drop=True)
             return df
@@ -31,7 +31,7 @@ def main():
     # Beautiful Header
     st.markdown(f"""
     <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #059669 0%, #10b981 100%); color:white; border-radius:16px; margin-bottom:15px; box-shadow: 0 12px 30px rgba(5,150,105,0.3);">
-        <h1 style="margin:0; font-size:2.4rem; font-weight:800;">📋 MERLIN Milestone Tracker</h1>
+        <h1 style="margin:0; font-size:2.4rem; color:white; font-weight:800;">📋 MERLIN Milestone</h1>
         <p style="margin:10px 0 0 0; font-size:1.1rem;">
             Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • Auto-refresh every {REFRESH_INTERVAL}s
         </p>
@@ -93,7 +93,7 @@ def main():
     filtered = df.copy()
 
     # Beautiful HTML Table
-    table_df = filtered[["Sub-Milestones", "Plan_Date", "Actual_Date", "Lead Time"]].copy()
+    table_df = filtered[["Sub-Milestones", "Plan_Date", "Actual_Date", "Lead Time", "Remarks"]].copy()
     table_df['Plan_Date'] = table_df['Plan_Date'].dt.strftime('%d-%b-%y').fillna("—")
     table_df['Actual_Date'] = table_df['Actual_Date'].dt.strftime('%d-%b-%y').fillna("—")
 
@@ -106,6 +106,7 @@ def main():
                 <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Plan Date</th>
                 <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Actual Date</th>
                 <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Lead Time</th>
+                <th style="background:#1e40af; color:white; padding:15px; text-align:left; font-weight:800;">Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -117,6 +118,7 @@ def main():
         html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Plan_Date']}</td>"
         html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Actual_Date']}</td>"
         html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Lead Time']}</td>"
+        html += f"<td style='padding:12px; border:1px solid #ddd; font-size:1.0rem;'>{row['Remarks']}</td>"
         html += "</tr>"
 
     html += """
