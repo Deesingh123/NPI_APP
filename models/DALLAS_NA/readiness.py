@@ -3,17 +3,12 @@ import pandas as pd
 from datetime import datetime
 
 def main():
-    # Back button to return to model selection
+    # Back button
     if st.button("← Back to Dashboard", key="back_dallas_readiness"):
-        if 'dashboard' in st.session_state:
-            del st.session_state.dashboard
         st.rerun()
 
-    #st.title("DALLAS NA - Process Readiness Tracker")
-
     REFRESH_INTERVAL = 30
-    # Replace this URL with DALLAS NA's actual readiness CSV link
-    CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBqDIx_ZBSYN7RaWxCIjHMZeFBkMhQaKcmc8mvq9KrE-Z1EFeaIsC1B4Fmw_wE_1NbzsConI04b6o0/pub?gid=777730961&single=true&output=csv"  # Update this!
+    CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBqDIx_ZBSYN7RaWxCIjHMZeFBkMhQaKcmc8mvq9KrE-Z1EFeaIsC1B4Fmw_wE_1NbzsConI04b6o0/pub?gid=777730961&single=true&output=csv"
 
     @st.cache_data(ttl=REFRESH_INTERVAL)
     def load_data():
@@ -25,18 +20,17 @@ def main():
 
     df = load_data()
 
-    # Beautiful Header (Blue gradient like UTAH NA)
+    # Header
     st.markdown(f"""
-    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); color:white; border-radius:16px; margin-bottom:15px; box-shadow: 0 12px 30px rgba(29,78,216,0.3);">
-        <h1 style="margin:0; font-size:2.4rem; font-weight:800;">DALLAS NA</h1>
+    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); color:white; border-radius:16px; margin-bottom:15px;">
+        <h1 style="margin:0; font-size:2.4rem; color: white; font-weight:800;">DALLAS NA Readiness</h1>
         <p style="margin:10px 0 0 0; font-size:1.1rem;">
             Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • Auto-refresh every {REFRESH_INTERVAL}s
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-
-    # Project Key Milestones for DALLAS NA
+    # Timeline (you can update dates if needed)
     st.markdown("""
     <div style="background:#f0f9ff; padding:15px; border-radius:20px; margin:15px 0; box-shadow:0 8px 30px rgba(0,0,0,0.1); border:1px solid #bae6fd;">
         <div style="text-align:center;">
@@ -63,97 +57,135 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
+    # Robust column detection
+    def find_column(columns, keywords):
+        for col in columns:
+            col_lower = col.lower().strip()
+            if any(k.lower() in col_lower for k in keywords):
+                return col
+        return None
 
-    # Column detection
-    category_col = next((c for c in df.columns if "process category" in c.lower()), df.columns[0])
-    sub_col = next((c for c in df.columns if "sub" in c.lower()), None)
-    owner_col = next((c for c in df.columns if "owner" in c.lower()), None)
-    target_col = next((c for c in df.columns if "target" in c.lower()), None)
-    status_col = next((c for c in df.columns if "status" in c.lower()), None)
-    remark_col = next((c for c in df.columns if "remark" in c.lower() or "remarks" in c.lower()), None)
+    category_col = find_column(df.columns, ["process category", "category"])
+    sub_col = find_column(df.columns, ["sub activity", "sub"])
+    owner_col = find_column(df.columns, ["owner"])
+    target_col = find_column(df.columns, ["target date", "target"])
+    actual_col = find_column(df.columns, ["actual date", "actual"])
+    status_col = find_column(df.columns, ["status"])
+    remark_col = find_column(df.columns, ["remarks", "remark"])
 
-    # Status calculation
+    essential = [category_col, sub_col, owner_col, target_col, status_col]
+    if not all(essential):
+        st.error("Essential columns not found in sheet.")
+        st.stop()
+
+    # Date parsing - Handle "15-Oct", "18-Nov", "3-Dec", "NaT", "—"
     if target_col:
-        df[target_col] = pd.to_datetime(df[target_col], errors='coerce', dayfirst=True)
+        df[target_col] = df[target_col].replace(["—", "NaT", "", "NA"], pd.NA)
+        df[target_col] = pd.to_datetime(df[target_col], format='%d-%b', errors='coerce')
+    if actual_col:
+        df[actual_col] = df[actual_col].replace(["—", "NaT", "", "NA"], pd.NA)
+        df[actual_col] = pd.to_datetime(df[actual_col], format='%d-%b', errors='coerce')
+
     today = pd.Timestamp.today().normalize()
 
+
+
+# Final Status Logic - "Ongoing" treated as "Open"
     def get_final_status(row):
-        closed = status_col and pd.notna(row.get(status_col)) and str(row[status_col]).strip().lower() in ["closed", "close", "done"]
-        overdue = target_col and pd.notna(row.get(target_col)) and row[target_col].normalize() < today
-        if closed and not overdue: return "Closed On Time"
-        if closed and overdue: return "Closed (Late)"
-        if overdue: return "NOT CLOSED – DELAYED!"
-        return "Open"
+        status_val = str(row[status_col]).strip().lower()
+        closed = status_val in ["closed", "close", "done"]
+        # Treat "ongoing" same as "open"
+        open_or_ongoing = status_val in ["open", "ongoing", "on going"]
+        overdue = pd.notna(row[target_col]) and row[target_col].normalize() < today
+
+        if closed:
+            return "Closed On Time"
+        elif open_or_ongoing:
+            return "Open"  # Ongoing → Open
+        elif overdue:
+            return "NOT CLOSED – DELAYED"
+        else:
+            return "Open"
 
     df["Final Status"] = df.apply(get_final_status, axis=1)
 
-    # Metric Cards
+    # Metric Cards - Ongoing counted in Open
     delayed = len(df[df["Final Status"].str.contains("DELAYED")])
-    open_count = len(df[df["Final Status"] == "Open"])
-    closed = len(df[~df["Final Status"].str.contains("Open|DELAYED")])
+    open_count = len(df[df["Final Status"] == "Open"])  # Includes Ongoing
+    closed = len(df[df["Final Status"] == "Closed On Time"])
+
 
     c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown(f"""
-        <div style='background:#ef4444; color:white; padding:15px 20px; border-radius:16px; text-align:center; box-shadow:0 8px 20px rgba(239,68,68,0.3); height:110px; display:flex; flex-direction:column; justify-content:center;'>
-            <p style='margin:0; font-size:1.5rem; font-weight:700;'>Delayed</p>
-            <h2 style='margin:6px 0 0 0; font-size:1.6rem; font-weight:1000;'>{delayed}</h2>
+        <div style='background:#ef4444; color:white; padding:15px 20px; border-radius:16px; text-align:center; box-shadow:0 8px 20px rgba(239,68,68,0.3); height:110px; display:flex; flex-direction:column; justify-content:center; align-items:center;'>
+            <p style='margin:0; font-size:1.5rem; font-weight:700; line-height:1.2;'>Delayed</p>
+            <h2 style='margin:6px 0 0 0; font-size:1.9rem; color:white; text-align:center; font-weight:1000; line-height:1;'>{delayed}</h2>
         </div>
         """, unsafe_allow_html=True)
     with c2:
         st.markdown(f"""
-        <div style='background:#fbbf24; color:white; padding:15px 20px; border-radius:16px; text-align:center; box-shadow:0 8px 20px rgba(251,191,36,0.3); height:110px; display:flex; flex-direction:column; justify-content:center;'>
-            <p style='margin:0; font-size:1.5rem; font-weight:700;'>Open</p>
-            <h2 style='margin:6px 0 0 0; font-size:1.6rem; font-weight:1000;'>{open_count}</h2>
+        <div style='background:#fbbf24; color:white; padding:20px; border-radius:16px; text-align:center; box-shadow:0 8px 20px rgba(251,191,36,0.3); height:110px; display:flex; flex-direction:column; justify-content:center; align-items:center;'>
+            <p style='margin:0; font-size:1.5rem; font-weight:700; line-height:1.2;'>Opened</p>
+            <h2 style='margin:6px 0 0 0;text-align: center; color:white; font-size:1.9rem; font-weight:1000; line-height:1;'>{open_count}</h2>
         </div>
         """, unsafe_allow_html=True)
     with c3:
         st.markdown(f"""
-        <div style='background:#22c55e; color:white; padding:15px 20px; border-radius:16px; text-align:center; box-shadow:0 8px 20px rgba(34,197,94,0.3); height:110px; display:flex; flex-direction:column; justify-content:center;'>
-            <p style='margin:0; font-size:1.5rem; font-weight:700;'>Closed</p>
-            <h2 style='margin:6px 0 0 0; font-size:1.6rem; font-weight:1000;'>{closed}</h2>
+        <div style='background:#22c55e; color:white; padding:15px 20px; border-radius:16px; text-align:center; box-shadow:0 8px 20px rgba(34,197,94,0.3); height:110px; display:flex; flex-direction:column; justify-content:center; align-items:center;'>
+            <p style='margin:0; font-size:1.5rem; font-weight:700; line-height:1.2;'>Closed</p>
+            <h2 style='margin:6px 0 0 0;color:white; font-size:1.9rem; font-weight:1000; line-height:1;'>{closed}</h2>
         </div>
         """, unsafe_allow_html=True)
+
     st.markdown("---")
 
     # Filters
-    col1, col2, col3 = st.columns(3)
     filtered = df.copy()
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         if owner_col:
             owners = ["All"] + sorted(filtered[owner_col].dropna().unique().tolist())
-            chosen_owner = st.selectbox("👤 Owner", owners, key="owner_ready_dallas")
+            chosen_owner = st.selectbox("👤 Owner", owners, key="owner_dallas")
             if chosen_owner != "All":
                 filtered = filtered[filtered[owner_col] == chosen_owner]
 
     with col2:
         categories = ["All"] + sorted(filtered[category_col].dropna().unique().tolist())
-        chosen_cat = st.selectbox("📋 Process Category", categories, key="cat_ready_dallas")
+        chosen_cat = st.selectbox("📋 Process Category", categories, key="cat_dallas")
         if chosen_cat != "All":
             filtered = filtered[filtered[category_col] == chosen_cat]
 
     with col3:
-        view = st.selectbox("🔍 View", ["All Items", "Only Delayed", "Only Open", "Only Closed"], key="view_ready_dallas")
+        view = st.selectbox("🔍 View", ["All Items", "Only Delayed", "Only Open", "Only Closed"], key="view_dallas")
         if view == "Only Delayed":
             filtered = filtered[filtered["Final Status"].str.contains("DELAYED")]
         elif view == "Only Open":
             filtered = filtered[filtered["Final Status"] == "Open"]
         elif view == "Only Closed":
-            filtered = filtered[~filtered["Final Status"].str.contains("Open|DELAYED")]
+            filtered = filtered[filtered["Final Status"] == "Closed On Time"]
 
     # Alert
     urgent = len(filtered[filtered["Final Status"].str.contains("DELAYED")])
     if urgent:
-        st.error(f"🚨 URGENT: {urgent} items DELAYED & NOT CLOSED!")
+        st.error(f"🚨 URGENT: {urgent} items DELAYED & NOT CLOSED")
     else:
         st.success("✅ All items are On Track or Closed")
 
-    # Beautiful HTML Table
-    cols_to_show = [category_col, sub_col, owner_col, target_col, status_col, remark_col, "Final Status"]
-    valid_cols = [c for c in cols_to_show if c and c in filtered.columns]
-    table_df = filtered[valid_cols].reset_index(drop=True)
+    # Format dates for display
+    table_df = filtered.copy()
+    if target_col in table_df.columns:
+        table_df[target_col] = table_df[target_col].dt.strftime('%d-%b').fillna("—")
+    if actual_col in table_df.columns:
+        table_df[actual_col] = table_df[actual_col].dt.strftime('%d-%b').fillna("—")
 
+    # Columns order
+    cols_to_show = [category_col, sub_col, owner_col, target_col, actual_col, status_col, remark_col, "Final Status"]
+    valid_cols = [c for c in cols_to_show if c in table_df.columns]
+    table_df = table_df[valid_cols]
+
+    # HTML Table - Show category on every row
     html = """
     <div style="overflow-x:auto; margin:20px 0;">
     <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif;">
@@ -168,17 +200,16 @@ def main():
         <tbody>
     """
 
+# In HTML table - "Open" (including Ongoing) gets yellow
     for _, row in table_df.iterrows():
-        status = row["Final Status"]
+        final_status = row["Final Status"]
         status_style = ""
-        if "DELAYED" in status:
+        if "DELAYED" in final_status:
             status_style = "background:#ef4444; color:white; font-weight:bold;"
-        elif "Late" in status:
-            status_style = "background:#86efac; color:white; font-weight:bold;"
-        elif "On Time" in status:
-            status_style = "background:#22c55e; color:white; font-weight:bold;"
-        elif status == "Open":
+        elif final_status == "Open":  # Covers both Open and Ongoing
             status_style = "background:#fbbf24; color:white; font-weight:bold;"
+        elif final_status == "Closed On Time":
+            status_style = "background:#22c55e; color:white; font-weight:bold;"
 
         html += "<tr>"
         for col in table_df.columns:
