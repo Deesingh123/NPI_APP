@@ -3,15 +3,14 @@ import pandas as pd
 from datetime import datetime
 
 def main():
-    # Back button to main dashboard
+    # Back button
     if st.button("← Back to Dashboard", key="back_merlin_plan"):
-        if 'dashboard' in st.session_state:
-            del st.session_state.dashboard
         st.rerun()
 
     REFRESH_INTERVAL = 30
     CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSUKAu7fJg3Oi9Q8_ffen20iCKteQCKLAXCrAVf369XD7zWGF_E3WNko47pUhWLz865B4NHWMFYKEaS/pub?gid=1031879361&single=true&output=csv"
 
+    @st.cache_data(ttl=REFRESH_INTERVAL)
     def load_data():
         df = pd.read_csv(CSV_URL)
         df = df.dropna(how='all').reset_index(drop=True)
@@ -29,33 +28,42 @@ def main():
 
     # Beautiful Header
     st.markdown(f"""
-    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); color:white; border-radius:16px; margin-bottom:20px; box-shadow: 0 12px 30px rgba(124,62,237,0.3);">
-        <h1 style="margin:0; font-size:2.4rem; font-weight:800;">🚀 MERLIN - Project Plan</h1>
+    <div style="text-align:center; padding:20px; background:linear-gradient(135deg, #c2410c 0%, #ea580c 100%); color:white; border-radius:16px; margin-bottom:20px; box-shadow: 0 12px 30px rgba(194,65,12,0.3);">
+        <h1 style="margin:0; font-size:2.4rem; color:white; font-weight:800;"> MERLIN Plan</h1>
         <p style="margin:10px 0 0 0; font-size:1.1rem;">
             Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • Auto-refresh every {REFRESH_INTERVAL}s
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Column detection
-    wbs_col = next((c for c in df.columns if "wbs" in c.lower()), df.columns[0])
-    milestone_col = next((c for c in df.columns if "milestone" in c.lower()), None)
-    plan_col = next((c for c in df.columns if "plan" in c.lower()), None)
-    actual_col = next((c for c in df.columns if "actual" in c.lower()), None)
-    remarks_col = next((c for c in df.columns if "remark" in c.lower() or "remarks" in c.lower()), None)
+    # Robust column detection
+    def find_column(columns, keywords):
+        for col in columns:
+            col_lower = col.lower().strip()
+            if any(k.lower() in col_lower for k in keywords):
+                return col
+        return None
+
+    wbs_col = find_column(df.columns, ["wbs"])
+    milestone_col = find_column(df.columns, ["milestone"])
+    plan_col = find_column(df.columns, ["plan date", "plan"])
+    actual_col = find_column(df.columns, ["actual date", "actual"])
+    remarks_col = find_column(df.columns, ["remarks", "remark"])
 
     # Safety check
     if not all([wbs_col, milestone_col, plan_col]):
         st.error("Required columns (WBS, Milestone, Plan Date) not found in sheet.")
         st.stop()
 
-    # Format dates
+    # Format dates - Explicit '%d-%b' for "1-Nov", "13-Dec", etc.
     df_display = df.copy()
     if plan_col in df_display.columns:
-        df_display[plan_col] = pd.to_datetime(df_display[plan_col], errors='coerce', dayfirst=True)
+        df_display[plan_col] = df_display[plan_col].replace("—", pd.NA)
+        df_display[plan_col] = pd.to_datetime(df_display[plan_col], format='%d-%b', errors='coerce')
         df_display[plan_col] = df_display[plan_col].dt.strftime('%d-%b').fillna("—")
     if actual_col in df_display.columns:
-        df_display[actual_col] = pd.to_datetime(df_display[actual_col], errors='coerce', dayfirst=True)
+        df_display[actual_col] = df_display[actual_col].replace("—", pd.NA)
+        df_display[actual_col] = pd.to_datetime(df_display[actual_col], format='%d-%b', errors='coerce')
         df_display[actual_col] = df_display[actual_col].dt.strftime('%d-%b').fillna("—")
 
     # Beautiful HTML Table with WBS grouping (blank on repeat)
