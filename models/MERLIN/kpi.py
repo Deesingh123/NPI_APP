@@ -20,10 +20,10 @@ def main():
         return df
 
     # Manual refresh
-    #col1, col2 = st.columns([1, 9])
-    #with col1:
-        #if st.button("🔄 Refresh"):
-            #st.rerun()
+    col1, col2 = st.columns([1, 9])
+    with col1:
+        if st.button("🔄 Refresh"):
+            st.rerun()
 
     df = load_data()
 
@@ -69,13 +69,13 @@ def main():
     <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif;">
         <thead>
             <tr>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:800; width:28%;'>KPI's</th>
-                <th style='background:#fbbf24; color:black; padding:15px; text-align:center; font-weight:800;'>Target</th>
-                <th style='background:#fbbf24; color:black; padding:15px; text-align:center; font-weight:800;'>Actual</th>
-                <th style='background:#e0e7ff; color:#1e40af; padding:15px; text-align:left; font-weight:800;'>Action plan</th>
-                <th style='background:#e0e7ff; color:#1e40af; padding:15px; text-align:center; font-weight:800;'>Target Dt</th>
-                <th style='background:#e0e7ff; color:#1e40af; padding:15px; text-align:center; font-weight:800;'>Resp.</th>
-                <th style='background:#e0e7ff; color:#1e40af; padding:15px; text-align:left; font-weight:800;'>Remarks</th>
+                <th style='background:#fbbf24; color:white; padding:15px; text-align:left; font-weight:1000; width:28%;'>KPI's</th>
+                <th style='background:#fbbf24; color:white; padding:15px; text-align:center; font-weight:1000;'>Target</th>
+                <th style='background:#fbbf24; color:white; padding:15px; text-align:center; font-weight:1000;'>Actual</th>
+                <th style='background:#fbbf24; color:white; padding:15px; text-align:left; font-weight:1000;'>Action plan</th>
+                <th style='background:#fbbf24; color:white; padding:15px; text-align:center; font-weight:1000;'>Target Dt</th>
+                <th style='background:#fbbf24; color:white; padding:15px; text-align:center; font-weight:1000;'>Resp.</th>
+                <th style='background:#fbbf24; color:white; padding:15px; text-align:left; font-weight:1000;'>Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -99,8 +99,8 @@ def main():
 
         html += f"<tr style='{row_style}'>"
         html += f"<td style='padding:12px; border:1px solid #e2e8f0; font-weight:bold;'>{kpi_name}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center; font-weight:bold; color:#166534;'>{target}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center; font-weight:bold; color:#dc2626;'>{actual}</td>"
+        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center; font-weight:bold;'>{target}</td>"
+        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center; font-weight:bold;'>{actual}</td>"
         html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{row.get(action_col, '—')}</td>"
         html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center;'>{row.get(target_dt_col, '—')}</td>"
         html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center;'>{row.get(resp_col, '—')}</td>"
@@ -127,5 +127,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
