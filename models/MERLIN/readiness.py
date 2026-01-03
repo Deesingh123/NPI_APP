@@ -4,8 +4,8 @@ from datetime import datetime
 
 def main():
     # Back button
-    if st.button("← Back to Dashboard", key="back_merlin_readiness"):
-        st.rerun()
+    #if st.button("← Back to Dashboard", key="back_merlin_readiness"):
+     #   st.rerun()
 
     REFRESH_INTERVAL = 30
     CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBqDIx_ZBSYN7RaWxCIjHMZeFBkMhQaKcmc8mvq9KrE-Z1EFeaIsC1B4Fmw_wE_1NbzsConI04b6o0/pub?gid=398221268&single=true&output=csv"
