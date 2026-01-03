@@ -4,10 +4,10 @@ from datetime import datetime
 
 def main():
     # Back button
-    if st.button("← Back to Dashboard", key="back_merlin_kpi"):
-        if 'dashboard' in st.session_state:
-            del st.session_state.dashboard
-        st.rerun()
+    #if st.button("← Back to Dashboard", key="back_merlin_kpi"):
+        #if 'dashboard' in st.session_state:
+         #   del st.session_state.dashboard
+        #st.rerun()
 
     REFRESH_INTERVAL = 30
     CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsS6PyxZ7Q07fxpaCmc-0mMowukVYiFA5EyDUP6BmFhXniA53bM30drIZnhEjLSPVHzuaqS4jjlLwb/pub?gid=1065751321&single=true&output=csv"
@@ -127,4 +127,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
