@@ -4,8 +4,8 @@ from datetime import datetime
 
 def main():
     # Back button
-    if st.button("← Back to Dashboard", key="back_merlin_mom_2025"):
-        st.rerun()
+    #if st.button("← Back to Dashboard", key="back_merlin_mom_2025"):
+        #st.rerun()
 
     REFRESH_INTERVAL = 30
     CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWMp9BS_dmgqDQfsvaT525XtS0yZk4OcBm16soaIlZa6qgAmeGS4UncOBB5l_K9pX0czG2IrHsohte/pub?gid=1982980723&single=true&output=csv"
@@ -188,4 +188,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
