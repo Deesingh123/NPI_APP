@@ -4,8 +4,8 @@ from datetime import datetime
 
 def main():
     # Back button
-    if st.button("← Back to Dashboard", key="back_merlin_plan"):
-        st.rerun()
+    #if st.button("← Back to Dashboard", key="back_merlin_plan"):
+        #st.rerun()
 
     REFRESH_INTERVAL = 30
     CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSUKAu7fJg3Oi9Q8_ffen20iCKteQCKLAXCrAVf369XD7zWGF_E3WNko47pUhWLz865B4NHWMFYKEaS/pub?gid=1031879361&single=true&output=csv"
@@ -71,16 +71,18 @@ def main():
     valid_cols = [c for c in cols_to_show if c in df_display.columns]
     table_df = df_display[valid_cols]
 
+
+
     html = """
     <div style="overflow-x:auto; margin:20px 0;">
     <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif;">
         <thead>
             <tr>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:800;'>WBS</th>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:800;'>Milestone</th>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:center; font-weight:800;'>Plan Date</th>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:center; font-weight:800;'>Actual Date</th>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:800;'>Remarks</th>
+                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:700; font-size:1.05rem;'>WBS</th>
+                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:700; font-size:1.05rem;'>Milestone</th>
+                <th style='background:#7c3aed; color:white; padding:15px; text-align:center; font-weight:700; font-size:1.05rem;'>Plan Date</th>
+                <th style='background:#7c3aed; color:white; padding:15px; text-align:center; font-weight:700; font-size:1.05rem;'>Actual Date</th>
+                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:700; font-size:1.05rem;'>Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -92,12 +94,12 @@ def main():
         display_wbs = "" if wbs_val == prev_wbs else wbs_val
         prev_wbs = wbs_val
 
-        html += "<tr style='background:#ffffff;'>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0; font-weight:bold;'>{display_wbs}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{row[milestone_col]}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center;'>{row.get(plan_col, '—')}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center;'>{row.get(actual_col, '—')}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{row.get(remarks_col, '—')}</td>"
+        html += "<tr>"
+        html += f"<td style='padding:12px; border-bottom:1px solid #444; font-weight:500; color:#ffffff; font-size:1rem;'>{display_wbs}</td>"
+        html += f"<td style='padding:12px; border-bottom:1px solid #444; font-weight:500; color:#ffffff; font-size:1rem;'>{row[milestone_col]}</td>"
+        html += f"<td style='padding:12px; border-bottom:1px solid #444; text-align:center; font-weight:500; color:#ffffff; font-size:1rem;'>{row.get(plan_col, '—')}</td>"
+        html += f"<td style='padding:12px; border-bottom:1px solid #444; text-align:center; font-weight:500; color:#ffffff; font-size:1rem;'>{row.get(actual_col, '—')}</td>"
+        html += f"<td style='padding:12px; border-bottom:1px solid #444; font-weight:400; color:#e0e0e0; font-size:1rem;'>{row.get(remarks_col, '—')}</td>"
         html += "</tr>"
 
     html += """
@@ -120,4 +122,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
