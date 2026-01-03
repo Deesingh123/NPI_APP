@@ -89,17 +89,17 @@ def main():
     """
 
     prev_wbs = None
-    for _, row in table_df.iterrows():
+    for _, row in table_df.iterrows():  # row is now the Series
         wbs_val = row[wbs_col]
         display_wbs = "" if wbs_val == prev_wbs else wbs_val
         prev_wbs = wbs_val
 
-        html += "<tr>"
-        html += f"<td style='padding:12px; border-bottom:1px solid #444; font-weight:500; color:#ffffff; font-size:1rem;'>{display_wbs}</td>"
-        html += f"<td style='padding:12px; border-bottom:1px solid #444; font-weight:500; color:#ffffff; font-size:1rem;'>{row[milestone_col]}</td>"
-        html += f"<td style='padding:12px; border-bottom:1px solid #444; text-align:center; font-weight:500; color:#ffffff; font-size:1rem;'>{row.get(plan_col, '—')}</td>"
-        html += f"<td style='padding:12px; border-bottom:1px solid #444; text-align:center; font-weight:500; color:#ffffff; font-size:1rem;'>{row.get(actual_col, '—')}</td>"
-        html += f"<td style='padding:12px; border-bottom:1px solid #444; font-weight:400; color:#e0e0e0; font-size:1rem;'>{row.get(remarks_col, '—')}</td>"
+        html += "<tr style='background:#ffffff;'>"
+        html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{display_wbs}</td>"
+        html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{row[milestone_col]}</td>"
+        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center;'>{row.get(plan_col, '—')}</td>"
+        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center;'>{row.get(actual_col, '—')}</td>"
+        html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{row.get(remarks_col, '—')}</td>"
         html += "</tr>"
 
     html += """
@@ -122,3 +122,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
