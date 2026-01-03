@@ -4,10 +4,10 @@ from datetime import datetime
 
 def main():
     # Back button to return to model selection
-    if st.button("← Back to Dashboard", key="back_milestone"):
-        if 'dashboard' in st.session_state:
-            del st.session_state.dashboard
-        st.rerun()
+    #if st.button("← Back to Dashboard", key="back_milestone"):
+     #   if 'dashboard' in st.session_state:
+      #      del st.session_state.dashboard
+       # st.rerun()
 
     REFRESH_INTERVAL = 30
     CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSe4nuvqUK1UQdv7o0aC8sunzc3sIIA6Ml29g9FV2-4CBO254JwHhA7HXXEDzefSqkgDxXNuc9bXp4-/pub?gid=287111587&single=true&output=csv"
@@ -139,3 +139,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
