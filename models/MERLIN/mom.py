@@ -104,7 +104,7 @@ def main():
     # === FILTERS AT TOP CENTER ===
     st.markdown("<h3 style='text-align:center; color:#7c3aed; margin:60px 0 20px 0;'>🔍 Filters</h3>", unsafe_allow_html=True)
 
-    fcol1, fcol2, fcol3 = st.columns([2, 2, 1])
+    fcol1, fcol2 = st.columns([2, 2])
 
     with fcol1:
         if resp_col:
@@ -114,10 +114,6 @@ def main():
     with fcol2:
         chosen_status = st.selectbox("Status", ["All", "Closed", "Open"], index=0, key="mom_status_filter_final")
 
-    with fcol3:
-        st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("Clear Filters", key="mom_clear_filter_final"):
-            st.rerun()
 
     # Apply filters
     filtered = df.copy()
@@ -188,5 +184,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
