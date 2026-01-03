@@ -20,10 +20,10 @@ def main():
         return df
 
     # Manual refresh
-    col1, col2 = st.columns([1, 9])
-    with col1:
-        if st.button("🔄 Refresh"):
-            st.rerun()
+    #col1, col2 = st.columns([1, 9])
+    #with col1:
+        #if st.button("🔄 Refresh"):
+            #st.rerun()
 
     df = load_data()
 
@@ -127,3 +127,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
