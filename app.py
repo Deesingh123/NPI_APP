@@ -138,8 +138,9 @@ try:
     module = importlib.import_module(file_path)
     module.main()
 except Exception as e:
-    #st.error(f"Error loading {selected_dashboard.upper()} for {model_display}: {e}")
-    st.info("Check if the file exists: models/{selected_model}/{selected_dashboard}.py")
+    st.error(f"Error loading {selected_dashboard.upper()} dashboard: {e}")
+    st.info(f"Check if the file exists: **models/{selected_model}/{selected_dashboard}.py**")
+    st.code(f"Expected path: {file_path}")
 
 # Footer
 st.markdown("""
