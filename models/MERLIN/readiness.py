@@ -154,7 +154,7 @@ def main():
             filtered = filtered[filtered[category_col] == chosen_cat]
 
     with col3:
-        view = st.selectbox("🔍 View", ["All Items", "Only Delayed", "Only Open", "Only Closed"], key="view_readiness_merlin")
+        view = st.selectbox("🔍 View", ["All Items", "Only Delayed", "Only Opened", "Only Closed"], key="view_readiness_merlin")
         if view == "Only Delayed":
             filtered = filtered[filtered["Final Status"].str.contains("DELAYED")]
         elif view == "Only Opened":
