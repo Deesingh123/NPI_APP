@@ -73,33 +73,39 @@ def main():
 
 
 
+    # Beautiful HTML Table - Works Perfectly in Light & Dark Mode
     html = """
     <div style="overflow-x:auto; margin:20px 0;">
     <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif;">
         <thead>
             <tr>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:700; font-size:1.05rem;'>WBS</th>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:700; font-size:1.05rem;'>Milestone</th>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:center; font-weight:700; font-size:1.05rem;'>Plan Date</th>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:center; font-weight:700; font-size:1.05rem;'>Actual Date</th>
-                <th style='background:#7c3aed; color:white; padding:15px; text-align:left; font-weight:700; font-size:1.05rem;'>Remarks</th>
+                <th style='background:#7c3aed; color:white; padding:18px; text-align:left; font-weight:700; font-size:1.1rem;'>WBS</th>
+                <th style='background:#7c3aed; color:white; padding:18px; text-align:left; font-weight:700; font-size:1.1rem;'>Milestone</th>
+                <th style='background:#7c3aed; color:white; padding:18px; text-align:center; font-weight:700; font-size:1.1rem;'>Plan Date</th>
+                <th style='background:#7c3aed; color:white; padding:18px; text-align:center; font-weight:700; font-size:1.1rem;'>Actual Date</th>
+                <th style='background:#7c3aed; color:white; padding:18px; text-align:left; font-weight:700; font-size:1.1rem;'>Remarks</th>
             </tr>
         </thead>
         <tbody>
     """
 
     prev_wbs = None
-    for _, row in table_df.iterrows():  # row is now the Series
+    for _, row in table_df.iterrows():
         wbs_val = row[wbs_col]
         display_wbs = "" if wbs_val == prev_wbs else wbs_val
         prev_wbs = wbs_val
 
-        html += "<tr style='background:#ffffff;'>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{display_wbs}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{row[milestone_col]}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center;'>{row.get(plan_col, '—')}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0; text-align:center;'>{row.get(actual_col, '—')}</td>"
-        html += f"<td style='padding:12px; border:1px solid #e2e8f0;'>{row.get(remarks_col, '—')}</td>"
+        # Adaptive colors using Streamlit theme variables
+        text_color = "var(--text-color)"
+        border_color = "var(--border-color)"
+        row_bg = "var(--background-color)" if _ % 2 == 0 else "var(--secondary-background-color)"
+
+        html += f"<tr style='background:{row_bg};'>"
+        html += f"<td style='padding:14px; border-bottom:1px solid {border_color}; font-weight:600; color:{text_color}; font-size:1rem;'>{display_wbs}</td>"
+        html += f"<td style='padding:14px; border-bottom:1px solid {border_color}; font-weight:500; color:{text_color}; font-size:1rem;'>{row[milestone_col]}</td>"
+        html += f"<td style='padding:14px; border-bottom:1px solid {border_color}; text-align:center; font-weight:500; color:{text_color}; font-size:1rem;'>{row.get(plan_col, '—')}</td>"
+        html += f"<td style='padding:14px; border-bottom:1px solid {border_color}; text-align:center; font-weight:500; color:{text_color}; font-size:1rem;'>{row.get(actual_col, '—')}</td>"
+        html += f"<td style='padding:14px; border-bottom:1px solid {border_color}; font-weight:400; color:{text_color}; opacity:0.9; font-size:1rem;'>{row.get(remarks_col, '—')}</td>"
         html += "</tr>"
 
     html += """
@@ -109,6 +115,7 @@ def main():
     """
 
     st.markdown(html, unsafe_allow_html=True)
+    
 
     # Sidebar
     with st.sidebar:
@@ -122,5 +129,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
