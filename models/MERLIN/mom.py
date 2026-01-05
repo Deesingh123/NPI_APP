@@ -31,7 +31,7 @@ def main():
     <div style="text-align:center; padding:20px; background:linear-gradient(135deg,#4338ca   0%, #a78bfa 100%); color:white; border-radius:16px; margin-bottom:15px; box-shadow: 0 12px 30px rgba(124,62,237,0.3);">
         <h1 style="margin:0; font-size:2.4rem; color:white; font-weight:1000;"> MERLIN Minutes of Meeting(MOM)</h1>
         <p style="margin:10px 0 0 0; font-size:1.1rem;">
-            Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • Auto-refresh every {REFRESH_INTERVAL}s
+            Updated: {datetime.now().strftime("%d-%b-%Y %I:%M:%S %p")} • Auto-refresh every {REFRESH_INTERVAL}s
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -184,6 +184,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
