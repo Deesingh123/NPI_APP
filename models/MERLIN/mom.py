@@ -40,15 +40,15 @@ def main():
     st.markdown("""
     <div style="background:#f0fdf4; padding:15px; border-radius:16px; margin:10px 0; border-left:6px #22c55e; box-shadow:0 4px 20px rgba(0,0,0,0.08);">
         <h2 style="text-align:center; color:#166534; font-size:1.5rem; margin:0 0 10px 0;">Merlin NA Project NPI Meeting</h2>
-        <h3 style="text-align:center; color:#0c4a6e; font-size:1.2rem; margin:5px 0;">Schedule Date: 14-Nov-2025</h3>
+        <h3 style="text-align:center; color:#0c4a6e; font-size:1.2rem; margin:5px 0;">Schedule Date: 05-Jan-2026</h3>
         <div style="display:flex; justify-content:center; gap:100px; margin-top:10px; flex-wrap:wrap;">
             <div style="text-align:center;">
                 <p style="font-weight:bold; color:#1e40af; margin:0;">Dixon</p>
-                <p style="margin:3px 0 0 0; color:#64748b;">Subrat, Prabhat</p>
+                <p style="margin:3px 0 0 0; color:#64748b;">Subrat, Risabh</p>
             </div>
             <div style="text-align:center;">
                 <p style="font-weight:bold; color:#1e40af; margin:0;">Moto</p>
-                <p style="margin:3px 0 0 0; color:#64748b;">Dharmpal, Kawaljeet, Himanshu puri, Hemant, Praveen</p>
+                <p style="margin:3px 0 0 0; color:#64748b;">Kawaljeet, Sachin, Janki</p>
             </div>
         </div>
     </div>
@@ -184,6 +184,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
