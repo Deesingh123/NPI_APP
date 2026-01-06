@@ -4,6 +4,8 @@ import os
 
 st.set_page_config(page_title="NPI Dashboard", layout="wide", initial_sidebar_state="expanded")
 
+
+
 # Custom CSS for buttons
 st.markdown("""
 <style>
@@ -126,21 +128,52 @@ with col5:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
+
+st.markdown("<div style='text-align:center; margin:40px 0 60px 0;'>", unsafe_allow_html=True)
+
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("**← Back to Dashboard**", use_container_width=True, key="← Back to Dashboard"):
+        st.session_state.selected_dashboard = None
+        st.rerun()
+
+with col2:
+    if st.button("📈 **Daily Issues Tracker**", use_container_width=True, key="btn_issues_tracker"):
+        st.session_state.selected_dashboard = "issues_tracker"
+        st.rerun()
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+
+
+
+
 # Default dashboard
 if "selected_dashboard" not in st.session_state:
     st.session_state.selected_dashboard = "readiness"
 
-# Load selected dashboard
+
 selected_dashboard = st.session_state.selected_dashboard
-file_path = f"models.{selected_model}.{selected_dashboard}"
 
 try:
-    module = importlib.import_module(file_path)
+    # ✅ COMMON DASHBOARD (NO MODEL)
+    if selected_dashboard == "issues_tracker":
+        module = importlib.import_module("common.issues_tracker")
+
+    # ✅ MODEL-SPECIFIC DASHBOARDS
+    else:
+        module = importlib.import_module(
+            f"models.{selected_model}.{selected_dashboard}"
+        )
+
     module.main()
+
 except Exception as e:
-    st.error(f"Error loading {selected_dashboard.upper()} dashboard: {e}")
-    st.info(f"Check if the file exists: **models/{selected_model}/{selected_dashboard}.py**")
-    st.code(f"Expected path: {file_path}")
+    st.error(f"Error loading {selected_dashboard.upper()} dashboard")
+    st.exception(e)
+
+
 
 # Footer
 st.markdown("""
