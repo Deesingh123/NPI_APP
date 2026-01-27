@@ -36,7 +36,7 @@ def main():
     # Header
     st.markdown(f"""
     <div style="text-align:center; padding:16px; background:linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); color:white; border-radius:12px; margin-bottom:12px;">
-        <h1 style="margin:0; font-size:2.4rem; color:white; font-weight:800;">MERLIN Readiness</h1>
+        <h1 style="margin:0; font-size:2.4rem; color:white; font-weight:800;">Merlin Readiness</h1>
         <p style="margin:8px 0 0 0; font-size:1rem;">
             Updated: {datetime.now().strftime('%d-%b-%Y %H:%M:%S')} • refresh every {REFRESH_INTERVAL}s
         </p>
@@ -254,11 +254,11 @@ def main():
     st.markdown(html, unsafe_allow_html=True)
 
     with st.sidebar:
-        st.success("🎯 AVENGER")
+        st.success("🎯 MERLIN")
         st.download_button(
             "📥 Download Current View",
             table_df.to_csv(index=False).encode(),
-            "avenger_readiness.csv",
+            "merlin_readiness.csv",
             "text/csv"
         )
 
