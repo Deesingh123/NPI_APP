@@ -9,9 +9,6 @@ st.set_page_config(page_title="NPI Dashboard", layout="wide", initial_sidebar_st
 # Custom CSS for buttons
 st.markdown("""
 <style>
-    .main-header { 
-        font-size: 4.2rem; font-weight: 800; color: #1e40af; text-align: center; margin: 60px 0 20px 0; 
-    }
     .dashboard-btn {
         height: 70px !important;
         font-size: 1.2rem !important;
@@ -27,28 +24,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Main Header
-st.markdown("""
-<div style="text-align:center; margin:60px 0 40px 0;">
-    <h1 style="display:inline; font-size:4.5rem; font-weight:900; 
-               background:linear-gradient(90deg, #1e40af, #3b82f6, #7c3aed, #ec4899);
-               -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-               animation: shine 8s linear infinite;">
-        NPI DASHBOARD
-    </h1>
-</div>
 
-<style>
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
-}
-@keyframes shine {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-}
-</style>
-""", unsafe_allow_html=True)
 
 # Get models
 model_folders = [f for f in os.listdir("models") if os.path.isdir(os.path.join("models", f))]
@@ -97,7 +73,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<div style='text-align:center; margin:40px 0 60px 0;'>", unsafe_allow_html=True)
+st.markdown("<div style='text-align:center; margin:40px 0 0 0;'>", unsafe_allow_html=True)
 
 col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -129,7 +105,7 @@ with col5:
 st.markdown("</div>", unsafe_allow_html=True)
 
 
-st.markdown("<div style='text-align:center; margin:40px 0 60px 0;'>", unsafe_allow_html=True)
+st.markdown("<div style='text-align:center; margin:40px 0 20px 0;'>", unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 
