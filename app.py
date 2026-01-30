@@ -78,7 +78,7 @@ st.markdown("<div style='text-align:center; margin:40px 0 0 0;'>", unsafe_allow_
 col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
-    if st.button("📋 **Readiness**", use_container_width=True, key="btn_readiness"):
+    if st.button("📋 **4M_Readiness**", use_container_width=True, key="btn_readiness"):
         st.session_state.selected_dashboard = "readiness"
         st.rerun()
 
