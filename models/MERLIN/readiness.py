@@ -2,12 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-
-
 def main():
-    #if st.button("← Back to Dashboard", key="back_avenger_readiness"):
-        #st.rerun()
-
     REFRESH_INTERVAL = 30
     CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBqDIx_ZBSYN7RaWxCIjHMZeFBkMhQaKcmc8mvq9KrE-Z1EFeaIsC1B4Fmw_wE_1NbzsConI04b6o0/pub?gid=398221268&single=true&output=csv"
 
@@ -21,19 +16,14 @@ def main():
 
     df = load_data()
 
-    # ── NEW: Fill down Process Category ────────────────────────────────
+    # Fill down Process Category (unchanged)
     category_col = next((col for col in df.columns if "process category" in col.lower() or "category" in col.lower()), None)
     if category_col:
-        # Replace dash with NaN so ffill works correctly
         df[category_col] = df[category_col].replace("—", pd.NA)
-        # Forward fill → repeat last valid category
         df[category_col] = df[category_col].ffill()
-        # Optional: fill remaining leading NaN if any (very rare)
         df[category_col] = df[category_col].fillna("No Category")
 
-    # ───────────────────────────────────────────────────────────────────
-
-    # Header
+    # Header (unchanged)
     st.markdown(f"""
     <div style="text-align:center; padding:16px; background:linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); color:white; border-radius:12px; margin-bottom:12px;">
         <h1 style="margin:0; font-size:2.4rem; color:white; font-weight:800;">Merlin Readiness</h1>
@@ -66,7 +56,7 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-    # Column detection (can come after fill now)
+    # Column detection (unchanged)
     def find_column(columns, keywords):
         for col in columns:
             col_lower = col.lower().strip()
@@ -86,11 +76,11 @@ def main():
         st.error("Essential columns not found in sheet.")
         st.stop()
 
-    # Date parsing
-    if target_col:
-        df[target_col] = pd.to_datetime(df[target_col].replace(["—", "NaT", "", "NA"], pd.NA), format='%d-%b', errors='coerce')
-    if actual_col:
-        df[actual_col] = pd.to_datetime(df[actual_col].replace(["—", "NaT", "", "NA"], pd.NA), format='%d-%b', errors='coerce')
+    # ────────────────────────────────────────────────────────────────
+    # IMPORTANT CHANGE: Do NOT convert Target / Actual Date to datetime
+    # Keep them as original string → shows exactly as in Google Sheet
+    # (no .dt.strftime(), no parsing)
+    # ────────────────────────────────────────────────────────────────
 
     today = pd.Timestamp.today().normalize()
 
@@ -98,7 +88,17 @@ def main():
         status_val = str(row.get(status_col, '')).strip().lower()
         closed = status_val in ["closed", "close", "done"]
         open_or_ongoing = status_val in ["open", "ongoing", "on going"]
-        overdue = pd.notna(row.get(target_col)) and row[target_col] < today
+
+        # For overdue check: only try to compare if it looks like a date we can parse
+        try:
+            target_str = str(row.get(target_col, '—')).strip()
+            if target_str != '—' and '/' in target_str:
+                target_date = pd.to_datetime(target_str, format='%m/%d/%Y', errors='coerce')
+                overdue = pd.notna(target_date) and target_date < today
+            else:
+                overdue = False
+        except:
+            overdue = False
 
         if closed:
             return "Closed"
@@ -111,7 +111,7 @@ def main():
 
     df["Final Status"] = df.apply(get_final_status, axis=1)
 
-    # Metrics
+    # Metrics (unchanged)
     delayed = len(df[df["Final Status"] == "Delayed"])
     opened  = len(df[df["Final Status"] == "Opened"])
     closed  = len(df[df["Final Status"] == "Closed"])
@@ -157,8 +157,8 @@ def main():
             filtered = filtered[filtered[category_col] == chosen_cat]
 
     with col3:
-        view = st.selectbox("View", 
-                            ["All Items", "Only Delayed", "Only Opened", "Only Closed"], 
+        view = st.selectbox("View",
+                            ["All Items", "Only Delayed", "Only Opened", "Only Closed"],
                             key="view_av")
         if view == "Only Delayed":
             filtered = filtered[filtered["Final Status"] == "Delayed"]
@@ -173,18 +173,15 @@ def main():
     else:
         st.success("✅ All items are Opened or Closed")
 
-    # Prepare table
+    # Prepare table → dates are kept as original strings
     table_df = filtered.copy()
-    if target_col:
-        table_df[target_col] = table_df[target_col].dt.strftime('%d-%b').fillna("—")
-    if actual_col:
-        table_df[actual_col] = table_df[actual_col].dt.strftime('%d-%b').fillna("—")
+    # No .dt.strftime() anymore — dates remain exactly as in sheet
 
     possible_cols = [category_col, sub_col, owner_col, target_col, actual_col, status_col, remark_col, "Final Status"]
     cols_to_show = [c for c in possible_cols if c is not None and c in table_df.columns]
     table_df = table_df[cols_to_show]
 
-    # ── COMPACT HTML TABLE ───────────────────────────────────────────────
+    # Compact HTML Table (unchanged styling)
     html = """
     <div style="overflow-x:auto; margin:12px 0;">
     <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif; font-size:0.88rem; line-height:1.25;">
@@ -194,13 +191,13 @@ def main():
 
     column_widths = {
         category_col: "10%",
-        sub_col:      "25%",
-        owner_col:    "13%",
-        target_col:   "5%",
-        actual_col:   "5%",
-        status_col:   "5%",
-        remark_col:   "34%",
-        "Final Status": "14%"
+        sub_col: "25%",
+        owner_col: "13%",
+        target_col: "7%",      # slightly wider for longer date format
+        actual_col: "7%",
+        status_col: "5%",
+        remark_col: "30%",
+        "Final Status": "13%"
     }
 
     for col in table_df.columns:
@@ -229,7 +226,6 @@ def main():
             text_color = "#166534"
 
         html += f"<tr style='background:{row_bg}; color:{text_color};'>"
-
         for col in table_df.columns:
             val = str(row[col]).replace("\n", "<br>")
             cell_style = ""
@@ -240,9 +236,7 @@ def main():
                     cell_style = "background:#fbbf24; color:white; font-weight:bold;"
                 elif final == "Closed":
                     cell_style = "background:#22c55e; color:white; font-weight:bold;"
-
             html += f"<td style='padding:6px 6px; border:1px solid #e5e7eb; vertical-align:top; {cell_style}'>{val}</td>"
-
         html += "</tr>"
 
     html += """
